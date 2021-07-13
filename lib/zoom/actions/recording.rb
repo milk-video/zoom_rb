@@ -21,6 +21,13 @@ module Zoom
         options.require(%i[meeting_id recording_id])
         Utils.parse_response self.class.delete("/meetings/#{options[:meeting_id]}/recordings/#{options[:recording_id]}",  query: options.except(:meeting_id, :recording_id), headers: request_headers)
       end
+
+      def account_recording_list(*args)
+        options = Zoom::Params.new(Utils.extract_options!(args))
+        options.require(:account_id)
+        Utils.process_datetime_params!(%i[from to], options)
+        Utils.parse_response self.class.get("/accounts/#{options[:account_id]}/recordings", query: options.except(:account_id), headers: request_headers)
+      end
     end
   end
 end
